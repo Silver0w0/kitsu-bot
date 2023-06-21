@@ -3,6 +3,22 @@ const fs = require('node:fs')
 const path =require('node:path')
 const {Client, Events, GatewayIntentBits, Collection} = require('discord.js')
 const { token } = require('./kitsu.json')
+const mongoose = require('mongoose')
+const bwelcome = require('./bwelcome.js')
+
+// Acceso a la base de datos
+const mongodbURL = 'mongodb+srv://silver:dgqgFtV0RS7GUIJ9@kitsu-bot.d0rpgur.mongodb.net/?retryWrites=true&w=majority'
+mongoose.connect(mongodbURL || '',{
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+
+if (mongoose.connect){
+  console.log('Base de datos iniciada.')
+}
+else{
+  console.log('Fallo en el acceso a la DB.')
+}
 
 // Creamos un nuevo cliente instaciado
 const client = new Client({ intents: [GatewayIntentBits.Guilds]})
@@ -26,7 +42,12 @@ for(const file of commandFiles){
 
 // Usamos 'c' como parametro del evento para separarlo de nuestra variable 'cliente'
 client.once(Events.ClientReady, c => {
+  let cache = client.channels.cache.get('1120648090723029012')
 	console.log(`LISTOOO! Iniciado ${c.user.tag} kyaaa!`);
+  console.log(cache)
+
+  bwelcome(client)
+
 });
 
 // Creamos los eventos intinerados
@@ -45,6 +66,23 @@ client.on(Events.InteractionCreate, async interaction => {
   } catch(error){
     console.error(error)
     await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true })
+  }
+})
+
+
+//welcome
+const welcome = require('./schemas.js/welcomeSchema')
+client.on(Events.GuildMemberAdd, async member => {
+  const data = await welcome.findOne({ Guild: member.guild.id})
+  if(!data) return
+  else{
+    const channel = await member.guild.channels.cache.get(data.channel)
+    const msg = await channel.send({ content: `${data.Message.replace('{member}', member).replace('{members}', member.user.username)}`}).catch(err => {})
+    try {
+      await msg.react(data.Reaction)
+    } catch(e){
+      return
+    }
   }
 })
 

@@ -1,18 +1,17 @@
-const { SlashCommandBuilder } = require('discord.js');
 const { Wordle } = require('discord-gamecord')
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
   .setName('wordle')
   .setDescription('Play wordle game'),
-  async execute (interaction) {
+  async execute(interaction) {
     const Game = new Wordle({
-      menssage: interaction,
+      message: interaction,
       embed: {
         title: 'wordle',
         color: '#5865F2'
       },
-      customword: null,
       timeoutTime: 60000,
       timeWords: "all",
       winMessage: "You won! The word was **{word}**",
@@ -22,7 +21,7 @@ module.exports = {
 
     Game.startGame()
     Game.on('gameOver', result => {
-      return
+      return;
     })
   }
 }

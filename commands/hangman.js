@@ -1,18 +1,18 @@
-const { SlashCommandBuilder, Embed } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { Hangman } = require('discord-gamecord')
 
 module.exports = {
   data: new SlashCommandBuilder()
   .setName('hangman')
   .setDescription('Play Hangman game'),
-  async execute (interaction) {
+  async execute(interaction) {
     const Game = new Hangman({
-      menssage: interaction,
+      message: interaction,
       embed: {
         title: 'Hangman',
         color: '#5865F2'
       },
-      hangman: {at: "🧢", head: "😶", shirt: "👕", pants: "👖", boots: "👟"},
+      hangman: {hat: "🎩", head: "😟", shirt: "👕", pants: "🩳", boots: "👞👞"},
       timeoutTime: 60000,
       timeWords: "all",
       winMessage: "You won! The word was **{word}**",

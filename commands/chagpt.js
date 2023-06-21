@@ -1,9 +1,8 @@
 const { SlashCommandBuilder, EmbedBuilder} = require('discord.js')
 const {Configuration, OpenAIApi} = require('openai')
-const { execute } = require('./hangman')
 
 const configuration = new Configuration({
-  apikey: ""
+  apikey: "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"
 })
 
 const openai = new OpenAIApi(configuration)
